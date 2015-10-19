@@ -43,4 +43,10 @@ describe Oystercard do
     oystercard.touch_out
     expect(oystercard).not_to be_in_journey
   end
+
+  it 'should raise an error if insufficient funds' do
+    oystercard = Oystercard.new(0.50)
+    msg = "Insufficient funds. Minimum balance is #{Oystercard::MIN_BALANCE}"
+    expect {oystercard.touch_in}.to raise_error msg
+  end
 end
