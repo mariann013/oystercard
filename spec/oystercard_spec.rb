@@ -25,13 +25,6 @@ describe Oystercard do
     expect {oystercard.top_up(value)}.to raise_error message
   end
 
-  it 'should deduct money' do
-    oystercard = Oystercard.new(20)
-    balance = oystercard.balance
-    fare = 2.30
-    expect(oystercard.deduct(fare)).to eq (balance - fare)
-  end
-
   it "should change status to in journey when tocuhed in" do
     oystercard = Oystercard.new(10)
     oystercard.touch_in
@@ -49,4 +42,10 @@ describe Oystercard do
     msg = "Insufficient funds. Minimum balance is #{Oystercard::MIN_BALANCE}"
     expect {oystercard.touch_in}.to raise_error msg
   end
+
+  it "should deduct fare when touched out" do
+    oystercard = Oystercard.new(10)
+    expect {oystercard.touch_out}.to change {oystercard.balance}.by(-Oystercard::MIN_BALANCE)
+  end
+
 end
