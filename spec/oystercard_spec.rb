@@ -31,4 +31,16 @@ describe Oystercard do
     fare = 2.30
     expect(oystercard.deduct(fare)).to eq (balance - fare)
   end
+
+  it "should change status to in journey when tocuhed in" do
+    oystercard = Oystercard.new(10)
+    oystercard.touch_in
+    expect(oystercard).to be_in_journey
+  end
+
+  it "should change status to not in journey when tocuhed out" do
+    oystercard = Oystercard.new(10)
+    oystercard.touch_out
+    expect(oystercard).not_to be_in_journey
+  end
 end
