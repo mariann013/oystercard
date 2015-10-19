@@ -2,6 +2,7 @@ require "./lib/oystercard.rb"
 
 describe Oystercard do
   let(:entry_station) { double :entry_station }
+  let(:exit_station) { double :exit_station }
   # subject(:oystercard) {Oystercard.new(20)}
   # let(:value) { 20 }
   it "has a balance " do
@@ -33,7 +34,7 @@ describe Oystercard do
 
   it "should change status to not in journey when tocuhed out" do
     oystercard = Oystercard.new(10)
-    oystercard.touch_out
+    oystercard.touch_out(exit_station)
     expect(oystercard).not_to be_in_journey
   end
 
@@ -45,7 +46,7 @@ describe Oystercard do
 
   it "should deduct fare when touched out" do
     oystercard = Oystercard.new(10)
-    expect {oystercard.touch_out}.to change {oystercard.balance}.by(-Oystercard::MIN_BALANCE)
+    expect {oystercard.touch_out(exit_station)}.to change {oystercard.balance}.by(-Oystercard::MIN_BALANCE)
   end
 
   it 'should return entry station to user' do
@@ -54,10 +55,16 @@ describe Oystercard do
     expect(oystercard.entry_station).to eq entry_station
   end
 
+  it "should return empty hash if no journey has been made" do
+    oystercard = Oystercard.new(10)
+    expect(oystercard.history).to be_empty
+  end
+
   it 'should reset the entry_station to nil when touching out' do
     oystercard = Oystercard.new(10)
     oystercard.touch_in(entry_station)
-    oystercard.touch_out
-    expect(oystercard.entry_station).to be_nil
+    oystercard.touch_out(exit_station)
+    expect(oystercard.history[entry_station]).to eq exit_station
   end
+
 end

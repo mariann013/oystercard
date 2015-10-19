@@ -6,10 +6,11 @@ class Oystercard
   MAX_BALANCE = 90
   MIN_BALANCE = 1
 
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :history
 
   def initialize(balance=DEFAULT_BALANCE)
     @balance = balance
+    @history = Hash.new
   end
 
 
@@ -25,8 +26,9 @@ class Oystercard
     @entry_station = entry_station
   end
 
-  def touch_out
+  def touch_out(exit_station)
     deduct(MIN_BALANCE)
+    history[entry_station] = exit_station
     @entry_station = nil
   end
 
@@ -39,5 +41,6 @@ class Oystercard
   def deduct(fare)
     @balance -= fare
   end
+
 
 end
