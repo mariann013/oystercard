@@ -1,8 +1,10 @@
 require "./lib/oystercard.rb"
+require "./lib/station.rb"
 
 describe Oystercard do
-  let(:entry_station) { double :entry_station }
-  let(:exit_station) { double :exit_station }
+  let(:entry_station) { double(:entry_station, :name => "Paddington", :zone => "1") }
+  let(:exit_station) { double(:exit_station, :name => "Kings X", :zone => "2") }
+
   # subject(:oystercard) {Oystercard.new(20)}
   # let(:value) { 20 }
   it "has a balance " do
@@ -72,6 +74,19 @@ describe Oystercard do
     oystercard.touch_in(entry_station)
     oystercard.touch_out(exit_station)
     expect(oystercard.history).not_to be_empty
+  end
+
+  it "entry station responds to zone method" do
+    oystercard = Oystercard.new(10)
+    oystercard.touch_in(entry_station)
+    expect(oystercard.entry_station).to respond_to :zone
+  end
+
+  it "exit station responds to zone method" do
+    oystercard = Oystercard.new(10)
+    oystercard.touch_in(entry_station)
+    oystercard.touch_out(exit_station)
+    expect(oystercard.history[0][entry_station]).to eq :exit_station
   end
 
 end
