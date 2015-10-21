@@ -1,9 +1,11 @@
-require "./lib/oystercard.rb"
-require "./lib/station.rb"
+require "oystercard.rb"
+require "station.rb"
+require "journey.rb"
 
 describe Oystercard do
   let(:entry_station) { double(:entry_station, :name => "Paddington", :zone => "1") }
   let(:exit_station) { double(:exit_station, :name => "Kings X", :zone => "2") }
+  let(:journey) { double(:journey, :touch_in => entry_station, :touch_out => entry_station) }
 
   # subject(:oystercard) {Oystercard.new(20)}
   # let(:value) { 20 }
@@ -27,54 +29,54 @@ describe Oystercard do
     message = "Can not top up, balance exceeds maximum balance of #{Oystercard::MAX_BALANCE}"
     expect {oystercard.top_up(value)}.to raise_error message
   end
+  #
+  # it "should change status to in journey when touched in" do
+  #   oystercard = Oystercard.new(10)
+  #   oystercard.touch_in(entry_station)
+  #   expect(oystercard).to be_in_journey
+  # end
 
-  it "should change status to in journey when tocuhed in" do
-    oystercard = Oystercard.new(10)
-    oystercard.touch_in(entry_station)
-    expect(oystercard).to be_in_journey
-  end
-
-  it "should change status to not in journey when tocuhed out" do
-    oystercard = Oystercard.new(10)
-    oystercard.touch_out(exit_station)
-    expect(oystercard).not_to be_in_journey
-  end
+  # it "should change status to not in journey when touched out" do
+  #   oystercard = Oystercard.new(10)
+  #   oystercard.touch_out(exit_station)
+  #   expect(oystercard).not_to be_in_journey
+  # end
 
   it 'should raise an error if insufficient funds' do
-    oystercard = Oystercard.new(0.50)
+    oystercard = Oystercard.new
     msg = "Insufficient funds. Minimum balance is #{Oystercard::MIN_BALANCE}"
-    expect {oystercard.touch_in(entry_station)}.to raise_error msg
+    expect {journey.touch_in(entry_station, oystercard)}.to raise_error msg
   end
 
   it "should deduct fare when touched out" do
     oystercard = Oystercard.new(10)
-    expect {oystercard.touch_out(exit_station)}.to change {oystercard.balance}.by(-Oystercard::MIN_BALANCE)
+    expect {journey.touch_out(exit_station)}.to change {oystercard.balance}.by(-Oystercard::MIN_BALANCE)
   end
 
-  it 'should return entry station to user' do
-    oystercard = Oystercard.new(10)
-    oystercard.touch_in(entry_station)
-    expect(oystercard.entry_station).to eq entry_station
-  end
+  # it 'should return entry station to user' do
+  #   oystercard = Oystercard.new(10)
+  #   oystercard.touch_in(entry_station)
+  #   expect(oystercard.entry_station).to eq entry_station
+  # end
 
   it "should return empty array if no journey has been made" do
     oystercard = Oystercard.new(10)
     expect(oystercard.history).to be_empty
   end
 
-  it 'should reset the entry_station to nil when touching out' do
-    oystercard = Oystercard.new(10)
-    oystercard.touch_in(entry_station)
-    oystercard.touch_out(exit_station)
-    expect(oystercard.entry_station).to eq nil
-  end
+  # it 'should reset the entry_station to nil when touching out' do
+  #   oystercard = Oystercard.new(10)
+  #   oystercard.touch_in(entry_station)
+  #   oystercard.touch_out(exit_station)
+  #   expect(oystercard.entry_station).to eq nil
+  # end
 
-  it 'stores a journey in the history array' do
-    oystercard = Oystercard.new(10)
-    oystercard.touch_in(entry_station)
-    oystercard.touch_out(exit_station)
-    expect(oystercard.history).not_to be_empty
-  end
+  # it 'stores a journey in the history array' do
+  #   oystercard = Oystercard.new(10)
+  #   oystercard.touch_in(entry_station)
+  #   oystercard.touch_out(exit_station)
+  #   expect(oystercard.history).not_to be_empty
+  # end
 
   it "entry station responds to zone method" do
     oystercard = Oystercard.new(10)

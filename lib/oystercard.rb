@@ -1,4 +1,5 @@
-require "./lib/station.rb"
+require_relative 'station'
+require_relative 'journey.rb'
 
 class Oystercard
 
@@ -10,9 +11,9 @@ class Oystercard
 
   def initialize(balance=DEFAULT_BALANCE)
     @balance = balance
-    @history = Array.new
+    @history = []
+    @journey = Journey.new
   end
-
 
   def top_up(value)
     message = "Can not top up, balance exceeds maximum balance of #{MAX_BALANCE}"
@@ -20,20 +21,8 @@ class Oystercard
     @balance += value
   end
 
-  def touch_in(entry_station)
-    message = "Insufficient funds. Minimum balance is #{Oystercard::MIN_BALANCE}"
-    fail message if balance < MIN_BALANCE
-    @entry_station = entry_station
-  end
-
-  def touch_out(exit_station)
-    deduct(MIN_BALANCE)
-    history << journey = { entry_station => exit_station }
-    @entry_station = nil
-  end
-
-  def in_journey?
-    @entry_station != nil
+  def low_balance?
+    @balance < MIN_BALANCE
   end
 
   private
@@ -43,3 +32,7 @@ class Oystercard
   end
 
 end
+
+# oystercard = Oystercard.new(0.50)
+# oystercard.balance
+# 0.5 < Oystercard::MIN_BALANCE
