@@ -28,13 +28,12 @@ class Oystercard
 
   def touch_out(exit_station)
     deduct(MIN_BALANCE)
-    journey = Hash.new
-    history << journey[entry_station] = exit_station
+    history << journey = { entry_station => exit_station }
     @entry_station = nil
   end
 
   def in_journey?
-    !@entry_station.nil?
+    @entry_station != nil
   end
 
   private
