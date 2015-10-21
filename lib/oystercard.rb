@@ -1,4 +1,4 @@
-
+require "./lib/station.rb"
 
 class Oystercard
 

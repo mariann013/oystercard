@@ -86,7 +86,7 @@ describe Oystercard do
     oystercard = Oystercard.new(10)
     oystercard.touch_in(entry_station)
     oystercard.touch_out(exit_station)
-    expect(oystercard.history[0][entry_station]).to eq :exit_station
+    expect(oystercard.history[0][entry_station].zone).to eq "2"
   end
 
 end
