@@ -43,5 +43,4 @@ class Oystercard
     @balance -= fare
   end
 
-
 end
