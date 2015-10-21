@@ -10,7 +10,7 @@ class Oystercard
 
   def initialize(balance=DEFAULT_BALANCE)
     @balance = balance
-    @history = Hash.new
+    @history = Array.new
   end
 
 
@@ -28,7 +28,8 @@ class Oystercard
 
   def touch_out(exit_station)
     deduct(MIN_BALANCE)
-    history[entry_station] = exit_station
+    journey = Hash.new
+    history << journey[entry_station] = exit_station
     @entry_station = nil
   end
 

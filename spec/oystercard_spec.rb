@@ -55,7 +55,7 @@ describe Oystercard do
     expect(oystercard.entry_station).to eq entry_station
   end
 
-  it "should return empty hash if no journey has been made" do
+  it "should return empty array if no journey has been made" do
     oystercard = Oystercard.new(10)
     expect(oystercard.history).to be_empty
   end
@@ -64,7 +64,14 @@ describe Oystercard do
     oystercard = Oystercard.new(10)
     oystercard.touch_in(entry_station)
     oystercard.touch_out(exit_station)
-    expect(oystercard.history[entry_station]).to eq exit_station
+    expect(oystercard.entry_station).to eq nil
+  end
+
+  it 'stores a journey in the history array' do
+    oystercard = Oystercard.new(10)
+    oystercard.touch_in(entry_station)
+    oystercard.touch_out(exit_station)
+    expect(oystercard.history).not_to be_empty
   end
 
 end
